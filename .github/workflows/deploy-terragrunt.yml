@@ -25,15 +25,17 @@ jobs:
       #   with:
       #     creds: ${{ secrets.AZURE_CREDENTIALS }}
       
-      - name: azure login
+      - name: export
         run: |          
-          export ARM_CLIENT_ID=${{ secrets.CLIENT_ID }}
-          export ARM_CLIENT_SECRET=${{ secrets.CLIENT_SECRET }}
-          export ARM_TENANT_ID=${{ secrets.TENANT_ID }}
+          export ARM_CLIENT_ID="${{ secrets.CLIENT_ID }}"
+          export ARM_CLIENT_SECRET="${{ secrets.CLIENT_SECRET }}"
+          export ARM_TENANT_ID="${{ secrets.TENANT_ID }}"
           export ARM_SUBSCRIPTION_ID="3eb4fcf9-7b07-492e-a136-85e534bc7696"
+          export
 
       - name: Run Azure CLI Command
         run: |
+          az login
           az account list -o table
 
       - name: Setup Terraform
