@@ -26,8 +26,11 @@ jobs:
       #     creds: ${{ secrets.AZURE_CREDENTIALS }}
       
       - name: azure login
-        run: |
-          az login --service-principal -u ${{ secrets.CLIENT_ID }} -p ${{ secrets.CLIENT_SECRET }} --tenant ${{ secrets.TENANT_ID }}
+        run: |          
+          export ARM_CLIENT_ID=${{ secrets.CLIENT_ID }}
+          export ARM_CLIENT_SECRET=${{ secrets.CLIENT_SECRET }}
+          export ARM_TENANT_ID=${{ secrets.TENANT_ID }}
+          export ARM_SUBSCRIPTION_ID="3eb4fcf9-7b07-492e-a136-85e534bc7696"
 
       - name: Run Azure CLI Command
         run: |
