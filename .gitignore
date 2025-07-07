@@ -7,7 +7,7 @@
 *.tfstate.*
 
 # .terragrunt files
-terragrunt.*
+.terragrunt.*
 .terraform.*
 
 # Crash log files
