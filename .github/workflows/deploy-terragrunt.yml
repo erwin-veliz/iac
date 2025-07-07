@@ -28,13 +28,13 @@ jobs:
 
       - name: Terragrunt Init
         run: terragrunt run-all init
-        working-directory: path/to/your/live/env  # e.g., live/prod
+        working-directory: dev/network  # e.g., live/prod
 
       - name: Terragrunt Plan
         run: terragrunt run-all plan
-        working-directory: path/to/your/live/env
+        working-directory: dev/network
 
       - name: Terragrunt Apply
         if: github.ref == 'refs/heads/main'
         run: terragrunt run-all apply -auto-approve
-        working-directory: path/to/your/live/env
+        working-directory: dev/network
