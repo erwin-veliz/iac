@@ -47,9 +47,14 @@ jobs:
           chmod +x terragrunt_linux_amd64
           sudo mv terragrunt_linux_amd64 /usr/local/bin/terragrunt
 
-      - name: Terragrunt Init
-        run: terragrunt  init
-        working-directory: dev/network  # e.g., live/prod
+      - name: terragrunt init
+        run: |     
+          cd dev/network
+          terragrunt init
+
+      # - name: Terragrunt Init
+      #   run: terragrunt init
+      #   working-directory: dev/network  # e.g., live/prod
 
       - name: Terragrunt Plan
         run: terragrunt plan
