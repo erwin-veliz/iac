@@ -1,0 +1,40 @@
+name: Deploy Terragrunt
+
+on:
+  push:
+    branches:
+      - main  # or your deployment branch
+  pull_request:
+
+jobs:
+  terragrunt:
+    name: Terragrunt Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.6.0  # Terragrunt uses Terraform under the hood
+
+      - name: Install Terragrunt
+        run: |
+          wget https://github.com/gruntwork-io/terragrunt/releases/download/v0.56.0/terragrunt_linux_amd64
+          chmod +x terragrunt_linux_amd64
+          sudo mv terragrunt_linux_amd64 /usr/local/bin/terragrunt
+
+      - name: Terragrunt Init
+        run: terragrunt run-all init
+        working-directory: path/to/your/live/env  # e.g., live/prod
+
+      - name: Terragrunt Plan
+        run: terragrunt run-all plan
+        working-directory: path/to/your/live/env
+
+      - name: Terragrunt Apply
+        if: github.ref == 'refs/heads/main'
+        run: terragrunt run-all apply -auto-approve
+        working-directory: path/to/your/live/env
