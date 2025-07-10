@@ -1,6 +1,6 @@
 module "networking_resource_group" {
   #source = "git::https://dev.azure.com/FET-Hispam-TI/Terraform-Iaac/_git/terraform-iaac-rg?ref=feature01"
-  source = "../modules/resource-group"
+  source = "./modules/resource-group"
   purpose_abreviation = "networking"  
   global-abreviations = var.global-abreviations 
   location = var.location  
