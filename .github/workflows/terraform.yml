@@ -36,3 +36,8 @@ jobs:
         id: plan                
         run: terraform plan -no-color -input=false -var-file=./env/prd.tfvars
         continue-on-error: true # Continúa incluso si el plan falla, para mostrar el error
+
+      - name: Terraform Apply
+        id: apply
+        run: terraform apply -no-color -input=false -var-file=./env/prd.tfvars -auto-approve=yes
+        continue-on-error: true # Continúa incluso si el plan falla, para mostrar el error
