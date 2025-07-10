@@ -1,6 +1,6 @@
 module "naming_convention" {
-  #source = "git::https://dev.azure.com/FET-Hispam-TI/Terraform-Iaac/_git/terraform-iaac-naming_convention"
-  source = "../terraform-iaac-naming_convention"
+  #source = "git::https://dev.azure.com/FET-Hispam-TI/Terraform-Iaac/_git/naming_convention"
+  source = "../naming_convention"
   resource_code = "rg"
   purpose_abreviation = var.purpose_abreviation
   global-abreviations = var.global-abreviations
@@ -8,8 +8,8 @@ module "naming_convention" {
 }
 
 module "tagging_convention" {
-  #source = "git::https://dev.azure.com/FET-Hispam-TI/Terraform-Iaac/_git/terraform-iaac-tagging_convention"
-  source = "../terraform-iaac-tagging_convention"
+  #source = "git::https://dev.azure.com/FET-Hispam-TI/Terraform-Iaac/_git/tagging_convention"
+  source = "../tagging_convention"
   global-tags = var.global-tags
   purpose_description = var.purpose_description
 }
