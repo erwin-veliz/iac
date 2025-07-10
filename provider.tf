@@ -4,7 +4,7 @@ terraform {
     resource_group_name   = "tfstate-rg" ###### crear previamente
     storage_account_name  = "tfstatestorage0101" ###### crear previamente
     container_name        = "tfstate"
-    key                   = "aprod-iaac-ibk.tfstate"
+    key                   = "aprod-iac.tfstate"
   }  
 }
 

@@ -27,22 +27,22 @@ jobs:
         id: init
         run: terraform init -input=false
 
-      - name: Run a Bash Command
-        run: |
-          pwd
-          ls -la
+      # - name: Run a Bash Command
+      #   run: |
+      #     pwd
+      #     ls -la
 
-      # - name: Terraform Plan
-      #   id: plan                
-      #   run: terraform plan -no-color -input=false -var-file=./env/prd.tfvars
-      #   continue-on-error: true # Continúa incluso si el plan falla, para mostrar el error
+      - name: Terraform Plan
+        id: plan                
+        run: terraform plan -no-color -input=false -var-file=./env/prd.tfvars
+        continue-on-error: true # Continúa incluso si el plan falla, para mostrar el error
 
       # - name: Terraform Apply
       #   id: apply
       #   run: terraform apply -no-color -input=false -var-file=./env/prd.tfvars -auto-approve
       #   continue-on-error: true # Continúa incluso si el plan falla, para mostrar el error
 
-      - name: Terraform Destroy
-        id: destroy
-        run: terraform destroy -no-color -input=false -var-file=./env/prd.tfvars -auto-approve
-        continue-on-error: true # Continúa incluso si el plan falla, para mostrar el error      
+      # - name: Terraform Destroy
+      #   id: destroy
+      #   run: terraform destroy -no-color -input=false -var-file=./env/prd.tfvars -auto-approve
+      #   continue-on-error: true # Continúa incluso si el plan falla, para mostrar el error      
