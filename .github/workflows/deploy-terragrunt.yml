@@ -1,4 +1,4 @@
-name: Deploy Terragrunt
+name: Deploy with terraform
 
 on:
   push:
@@ -7,61 +7,23 @@ on:
   pull_request:
 
 jobs:
-  terragrunt:
-    name: Terragrunt Deploy
+  terraform:
+    name: Terraform Deploy
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      
-      # - name: Run a Bash Command
-      #   run: |
-      #     pwd
-      #     ls -la
-
-      # - name: Azure Login
-      #   uses: azure/login@v2
-      #   with:
-      #     creds: ${{ secrets.AZURE_CREDENTIALS }}
-      
-      # - name: export
-      #   run: |          
-      #     export ARM_CLIENT_ID="${{ secrets.CLIENT_ID }}"
-      #     export ARM_CLIENT_SECRET="${{ secrets.CLIENT_SECRET }}"
-      #     export ARM_TENANT_ID="${{ secrets.TENANT_ID }}"
-      #     export ARM_SUBSCRIPTION_ID="3eb4fcf9-7b07-492e-a136-85e534bc7696"          
-
-      # - name: Run Azure CLI Command
-      #   run: |          
-      #     az account list -o table
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
+
+      - name: Azure login
+        uses: azure/login@v1.4.6
         with:
-          terraform_version: 1.6.0  # Terragrunt uses Terraform under the hood
+          creds: '{"clientId":"${{ secrets.AZURE_CLIENT_ID }}","clientSecret":"${{ secrets.AZURE_CLIENT_SECRET }}","subscriptionId":"${{ secrets.AZURE_SUBSCRIPTION_ID }}","tenantId":"${{ secrets.AZURE_TENANT_ID }}"}'
 
-      - name: Install Terragrunt
-        run: |
-          wget https://github.com/gruntwork-io/terragrunt/releases/download/v0.56.0/terragrunt_linux_amd64
-          chmod +x terragrunt_linux_amd64
-          sudo mv terragrunt_linux_amd64 /usr/local/bin/terragrunt
-
-      - name: terragrunt init
-        run: |
-          az login --service-principal -u ${{ secrets.CLIENT_ID }} -p ${{ secrets.CLIENT_SECRET }} --tenant ${{ secrets.TENANT_ID }}     
-          cd dev/network
-          terragrunt init
-
-      # - name: Terragrunt Init
-      #   run: terragrunt init
-      #   working-directory: dev/network  # e.g., live/prod
-
-      - name: Terragrunt Plan
-        run: terragrunt plan
-        working-directory: dev/network
-
-      - name: Terragrunt Apply
-        if: github.ref == 'refs/heads/main'
-        run: terragrunt apply -auto-approve
-        working-directory: dev/network
+      - name: Terraform Init
+        id: init
+        run: terraform init -input=false
+          
