@@ -25,6 +25,9 @@ variable "resource_incremental" {
 variable "global-abreviations" {
   description = "Abreviaciones globales para todos los recursos"
   type = object({
+    company    = string
+    region = string
+    subscription      = string
     environment = string
     cloud = string
   })

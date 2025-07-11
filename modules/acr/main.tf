@@ -1,5 +1,5 @@
 module "naming_convention" {
-  source = "git::https://dev.azure.com/FET-Hispam-TI/Terraform-Iaac/_git/terraform-iaac-naming_convention"
+  source = "../naming_convention"
   resource_code = "acr"
   purpose_abreviation = var.purpose_abreviation
   global-abreviations = var.global-abreviations
