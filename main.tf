@@ -1,78 +1,88 @@
-module "networking_resource_group" {
-  #source = "git::https://dev.azure.com/FET-Hispam-TI/Terraform-Iaac/_git/terraform-iaac-rg?ref=feature01"
+module "moma_resource_group" {
   source = "./modules/resource-group"
-  purpose_abreviation = "networking"  
+  purpose_abreviation = "moma"
   global-abreviations = var.global-abreviations 
   location = var.location  
   global-tags = var.global-tags  
-  purpose_description = "RG para test"  
+  purpose_description = "RG para Moma"
 }
 
-# module "integration_resource_group" {
-#   source = "git::https://dev.azure.com/FET-Hispam-TI/Terraform-Iaac/_git/terraform-iaac-rg?ref=feature01"
-#   #source = "./modules/resource_group"
-#   purpose_abreviation = "integration"
-#   global-abreviations = var.global-abreviations 
-#   location = var.location  
-#   global-tags = var.global-tags  
-#   purpose_description = "RG para integration"  
+module "moma_vnet" { 
+ source              = "./modules/vnet"
+ resource_group_name = module.moma_resource_group.name
+ location            = var.location
+ purpose_abreviation = "moma"
+ purpose_description = "vnet para moma"
+ global-abreviations = var.global-abreviations
+ vnet_address_space  = var.moma_vnet_address
+ subnet_address = var.moma_subnet_address
+ subnet_name = var.moma_subnet_name
+ global-tags = var.global-tags
+ create_nsg = var.moma_subnet_nsg
+ depends_on          = [module.moma_resource_group]
+}
+
+# module "privatelink_vnet" {
+#  #source              = "git::https://dev.azure.com/FET-Hispam-TI/Terraform-Iaac/_git/terraform-iaac-vnet?ref=feature/addSubnetName"
+#  source              = "./modules/vnet"
+#  resource_group_name = module.moma_resource_group.name
+#  location            = var.location
+#  purpose_abreviation = "privatelink"
+#  purpose_description = "vnet para privatelink"
+#  global-abreviations = var.global-abreviations
+#  vnet_address_space  = var.privatelink_vnet_address
+#  subnet_address = var.privatelink_subnet_address
+#  subnet_name = var.privatelink_subnet_name
+#  global-tags = var.global-tags
+#  create_nsg = var.privatelink_subnet_nsg
+#  depends_on          = [module.moma_resource_group, module.moma_vnet]
 # }
 
-# module "identity_resource_group" {
-#   source = "git::https://dev.azure.com/FET-Hispam-TI/Terraform-Iaac/_git/terraform-iaac-rg?ref=feature01"
-#   #source = "./modules/resource_group"
-#   purpose_abreviation = "identity"
-#   global-abreviations = var.global-abreviations 
-#   location = var.location  
-#   global-tags = var.global-tags  
-#   purpose_description = "RG para identity"  
+# module "acr_priv_dns" {  
+#   source = "./modules/priv_dns"
+#   global-abreviations = var.global-abreviations
+#   global-tags = var.global-tags
+#   purpose_description = "private dns para acr"  
+#   dns_name = "privatelink.azurecr.io"
+#   resource_group_name = module.moma_resource_group.name  
+#   vnet_id = module.privatelink_vnet.vnet_id # indicar vnet_id para vincular el private DNS
+#   vnet_name_for_link = module.privatelink_vnet.vnet_name
+#   #resource_incremental = var.resource_incremental
 # }
 
-# module "fet_resource_group" {
-#   source = "git::https://dev.azure.com/FET-Hispam-TI/Terraform-Iaac/_git/terraform-iaac-rg?ref=feature01"
-#   #source = "./modules/resource_group"
-#   purpose_abreviation = "fet"
-#   global-abreviations = var.global-abreviations 
-#   location = var.location  
-#   global-tags = var.global-tags  
-#   purpose_description = "RG para fet"  
-# }
-
-# module "capacomun_resource_group" {
-#   source = "git::https://dev.azure.com/FET-Hispam-TI/Terraform-Iaac/_git/terraform-iaac-rg?ref=feature01"
-#   #source = "./modules/resource_group"
-#   purpose_abreviation = "capacomun"
-#   global-abreviations = var.global-abreviations 
-#   location = var.location  
-#   global-tags = var.global-tags  
-#   purpose_description = "RG para capacomun"  
-# }
-
-# module "administration_resource_group" {
-#   source = "git::https://dev.azure.com/FET-Hispam-TI/Terraform-Iaac/_git/terraform-iaac-rg?ref=feature01"
-#   #source = "./modules/resource_group"
-#   purpose_abreviation = "administration"
-#   global-abreviations = var.global-abreviations 
-#   location = var.location  
-#   global-tags = var.global-tags  
-#   purpose_description = "RG para administration"  
-# }
+module "acr" {  
+  source = "./modules/acr"
+  global-abreviations = var.global-abreviations
+  purpose_abreviation = "moma"
+  resource_group_name = module.moma_resource_group.name
+  location = var.location
+  global-tags = var.global-tags
+  purpose_description = "Container Regisrty para el AKS de Moma"
+  #resource_incremental = "02"
+  # subnet_id = module.app_subnet.id
+  # dns = {
+  #   zone_ids  = [module.acr_priv_dns.id]
+  #   zone_name = module.acr_priv_dns.name
+  # }
+  # private_endpoint_incremental = "01"
+  # depends_on = [module.acr_priv_dns]
+}
 
 
 # ########################## VNET AND SUBNETS ##########################
-# module "integration_vnet" {
+# module "moma_vnet" {
 #  source              = "git::https://dev.azure.com/FET-Hispam-TI/Terraform-Iaac/_git/terraform-iaac-vnet?ref=feature/addSubnetName"
 #  #source              = "../terraform-iaac-vnet"
 #  resource_group_name = module.networking_resource_group.name
 #  location            = var.location
-#  purpose_abreviation = "integration"
-#  purpose_description = "vnet para integration"  
+#  purpose_abreviation = "moma"
+#  purpose_description = "vnet para moma"  
 #  global-abreviations = var.global-abreviations
-#  vnet_address_space  = var.integration_vnet_address
-#  subnet_address = var.integration_subnet_address
-#  subnet_name = var.integration_subnet_name
+#  vnet_address_space  = var.moma_vnet_address
+#  subnet_address = var.moma_subnet_address
+#  subnet_name = var.moma_subnet_name
 #  global-tags = var.global-tags
-#  create_nsg = var.integration_subnet_nsg
+#  create_nsg = var.moma_subnet_nsg
 #  depends_on          = [module.networking_resource_group]
 # }
 
@@ -89,7 +99,7 @@ module "networking_resource_group" {
 #  subnet_name = var.privatelink_subnet_name
 #  global-tags = var.global-tags
 #  create_nsg = var.privatelink_subnet_nsg
-#  depends_on          = [module.networking_resource_group, module.integration_vnet]
+#  depends_on          = [module.networking_resource_group, module.moma_vnet]
 # }
 
 # module "db_vnet" {
@@ -156,7 +166,7 @@ module "networking_resource_group" {
 #  depends_on          = [module.networking_resource_group]
 # }
 
-# module "integration_pip" {
+# module "moma_pip" {
 #   source = "git::https://dev.azure.com/FET-Hispam-TI/Terraform-Iaac/_git/terraform-iaac-pip"
 #   #source = "./modules/public_ip"
 #   purpose_abreviation = "apw"
@@ -165,22 +175,22 @@ module "networking_resource_group" {
 #   global-tags = var.global-tags
 #   purpose_description = "pip para api gateway"
 #   zones = [1] 
-#   resource_group_name = module.integration_resource_group.name
+#   resource_group_name = module.moma_resource_group.name
 # }
 
 # module "api_gateway" {
 #   source = "git::https://dev.azure.com/FET-Hispam-TI/Terraform-Iaac/_git/terraform-iaac-ag"
 #   #source = "./modules/api_gateway"
 #   global-abreviations = var.global-abreviations
-#   #purpose_abreviation = "integration"
-#   resource_group_name = module.integration_resource_group.name
+#   #purpose_abreviation = "moma"
+#   resource_group_name = module.moma_resource_group.name
 #   resource_incremental = "02"
 #   location = var.location
 #   global-tags = var.global-tags
-#   subnet_id = module.integration_vnet.subnet_ids.0
-#   vnet_name = module.integration_vnet.vnet_name
+#   subnet_id = module.moma_vnet.subnet_ids.0
+#   vnet_name = module.moma_vnet.vnet_name
 #   frontend_port = var.frontend_port_var
-#   public_ip_address_id = module.integration_pip.id
+#   public_ip_address_id = module.moma_pip.id
 #   cookie_based_affinity = var.cookie_based_affinity_var
 #   backend_http_setting_path = var.backend_http_setting_path_var
 #   backend_http_setting_port = var.backend_http_setting_port_var
@@ -195,27 +205,14 @@ module "networking_resource_group" {
 #   waf_rule_set_type = var.waf_rule_set_type_var
 #   waf_rule_set_version = var.waf_rule_set_version_var
 #   zones = [1]
-#   depends_on          = [module.integration_vnet, module.integration_pip]
-# }
-
-# module "acr_priv_dns" {
-#   source = "git::https://dev.azure.com/FET-Hispam-TI/Terraform-Iaac/_git/terraform-iaac-privdns"
-#   #source = "./modules/priv_dns"
-#   global-abreviations = var.global-abreviations
-#   global-tags = var.global-tags
-#   purpose_description = "private dns para acr"  
-#   dns_name = "privatelink.azurecr.io"
-#   resource_group_name = module.integration_resource_group.name  
-#   vnet_id = module.integration_vnet.vnet_id # indicar vnet_id para vincular el private DNS
-#   vnet_name_for_link = module.integration_vnet.vnet_name
-#   #resource_incremental = var.resource_incremental
+#   depends_on          = [module.moma_vnet, module.moma_pip]
 # }
 
 # module "acr" {
 #   source = "git::https://dev.azure.com/FET-Hispam-TI/Terraform-Iaac/_git/terraform-iaac-acr"
 #   global-abreviations = var.global-abreviations
-#   #purpose_abreviation = "integration"
-#   resource_group_name = module.integration_resource_group.name
+#   #purpose_abreviation = "moma"
+#   resource_group_name = module.moma_resource_group.name
 #   location = var.location
 #   global-tags = var.global-tags
 #   purpose_description = "Container Regisrty para el AKS de Integracion"
@@ -232,7 +229,7 @@ module "networking_resource_group" {
 # module "aks" {
 #   source = "git::https://dev.azure.com/FET-Hispam-TI/Terraform-Iaac/_git/terraform-iaac-aks"
 #   global-abreviations = var.global-abreviations
-#   resource_group_name = module.integration_resource_group.name
+#   resource_group_name = module.moma_resource_group.name
 #   location = var.location
 #   global-tags = var.global-tags 
 #   kubernetes_version = var.aks_version
@@ -241,8 +238,8 @@ module "networking_resource_group" {
 #   system_node_size = var.aks_system_node_size
 #   # app_node_count = var.aks_app_node_count
 #   # app_node_size =  var.aks_app_node_size  
-#   vnet_id = module.integration_vnet.vnet_id
-#   subnet_id = module.integration_vnet.subnet_ids.2
+#   vnet_id = module.moma_vnet.vnet_id
+#   subnet_id = module.moma_vnet.subnet_ids.2
 #   purpose_description = "AKS para Integracion"
 #   acr_id = module.acr.id
 #   zones = [1]
@@ -253,19 +250,19 @@ module "networking_resource_group" {
 # module "api_management" {
 #   source = "git::https://dev.azure.com/FET-Hispam-TI/Terraform-Iaac/_git/terraform-iaac-api"
 #   #source                  = "./terraform-iaac-api"
-#   resource_group_name     = module.integration_resource_group.name
+#   resource_group_name     = module.moma_resource_group.name
 #   location                = var.location
 #   purpose_abreviation     = "apim"
 #   purpose_description     = "apim para integracion"
 #   global-abreviations     = var.global-abreviations
 #   global-tags             = var.global-tags
-#   api_snet_id             = module.integration_vnet.subnet_ids[1]
-#   nsg_name                = "${module.integration_vnet.subnet_names[1]}-NSG"
+#   api_snet_id             = module.moma_vnet.subnet_ids[1]
+#   nsg_name                = "${module.moma_vnet.subnet_names[1]}-NSG"
 #   api_sku                 = "Developer"
 #   api_deployed_units      = "1" # Esto solo tendra efecto cuando el SKU es Premium
 #   resource_incremental    = "04"
 #   nsg_resource_group_name = module.networking_resource_group.name
-#   depends_on = [module.integration_vnet]  
+#   depends_on = [module.moma_vnet]  
 # }
 
 # module "b2c" {

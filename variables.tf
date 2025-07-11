@@ -29,23 +29,23 @@ variable "location" {
     type = string
 }
 
-variable "integration_vnet_address" {
+variable "moma_vnet_address" {
   description = "VNET destinada a los componentes de control de trafico, autenticacion y autorización de aplicaciones y plataforma de contenedores de PRODUCCION"
   type        = list(string)
 }
 
-variable "integration_subnet_address" {
-  description = "Subnet destinada a integration de PRODUCCION"
+variable "moma_subnet_address" {
+  description = "Subnet destinada a moma de PRODUCCION"
   type        = list(string)
 }
 
-variable "integration_subnet_name" {
-  description = "Subnet name a integration de PRODUCCION"
+variable "moma_subnet_name" {
+  description = "Subnet name a moma de PRODUCCION"
   type        = list(string)
 }
 
-variable "integration_subnet_nsg" {
-  description = "Subnet name a integration de PRODUCCION"
+variable "moma_subnet_nsg" {
+  description = "Subnet name a moma de PRODUCCION"
   type        = list(string)  
 }
 
